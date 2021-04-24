@@ -1,10 +1,12 @@
 const socket = io();
 
 let connections_users = [];
+let current_connections = [];
 
 socket.on("admin_list_all_users", connections => {
 
     connections_users = connections; 
+    console.log(connections);
 
     document.getElementById("list_users").innerHTML = "";
 
@@ -26,6 +28,8 @@ function call(id) {
     const connection = connections_users.find(
         connection => connection.socket_id === id
     );
+
+    current_connections.push(connection);
 
     const template = document.getElementById("admin_template").innerHTML;
 
@@ -106,7 +110,9 @@ socket.on("admin_receive_message", data => {
     console.log(data);
     const { message, socket_id } = data;
 
-    const connection = connections_users.find(connection => connection.socket_id === socket_id);
+    const connection = current_connections.find(
+        connection => connection.socket_id === socket_id
+    );
 
     const divMessages = document.getElementById(`allMessages${connection.user_id}`);
     const createDiv = document.createElement("div");
